@@ -18,7 +18,6 @@ import java.util.List;
 public class BatchController {
 
     private final IBatchService batchService;
-
     @PostMapping
     public ResponseEntity<BatchResponse> createBatch(
             @Valid @RequestBody BatchRequest request) {
@@ -64,6 +63,4 @@ public class BatchController {
 
         return ResponseEntity.ok(batchService.getBatchesExpiringInDays(days));
     }
-
-
 }
