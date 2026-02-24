@@ -15,4 +15,6 @@ public interface AlertRepository extends JpaRepository<Alert, Long> {
             String message
     );
 
+    Long countByResolvedFalse();
+
 }

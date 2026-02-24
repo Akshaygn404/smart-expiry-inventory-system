@@ -1,6 +1,8 @@
 package com.akshay.smart_inventory.service.wastage;
 
 import com.akshay.smart_inventory.dto.request.WastageRequest;
+import com.akshay.smart_inventory.dto.response.TopWastedProductResponse;
+import com.akshay.smart_inventory.dto.response.WastageMonthlyResponse;
 import com.akshay.smart_inventory.dto.response.WastageResponse;
 import com.akshay.smart_inventory.dto.response.WastageSummaryResponse;
 
@@ -13,4 +15,8 @@ public interface IWastageService {
     List<WastageResponse> getAllWastage();
 
     WastageSummaryResponse getWastageSummary();
+
+    List<WastageMonthlyResponse> getMonthlyWastage();
+
+    List<TopWastedProductResponse> getTopWastedProducts();
 }

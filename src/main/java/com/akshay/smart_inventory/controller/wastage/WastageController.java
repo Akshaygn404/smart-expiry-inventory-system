@@ -1,6 +1,8 @@
 package com.akshay.smart_inventory.controller.wastage;
 
 import com.akshay.smart_inventory.dto.request.WastageRequest;
+import com.akshay.smart_inventory.dto.response.TopWastedProductResponse;
+import com.akshay.smart_inventory.dto.response.WastageMonthlyResponse;
 import com.akshay.smart_inventory.dto.response.WastageResponse;
 import com.akshay.smart_inventory.dto.response.WastageSummaryResponse;
 import com.akshay.smart_inventory.service.wastage.IWastageService;
@@ -35,5 +37,17 @@ public class WastageController {
     public ResponseEntity<WastageSummaryResponse> getSummary() {
         return ResponseEntity.ok(
                 wastageService.getWastageSummary());
+    }
+
+    @GetMapping("/monthly")
+    public ResponseEntity<List<WastageMonthlyResponse>> getMonthlyStats() {
+        return ResponseEntity.ok(
+                wastageService.getMonthlyWastage());
+    }
+
+    @GetMapping("/top-products")
+    public ResponseEntity<List<TopWastedProductResponse>> getTopWastedProducts() {
+        return ResponseEntity.ok(
+                wastageService.getTopWastedProducts());
     }
 }

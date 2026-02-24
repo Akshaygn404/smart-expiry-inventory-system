@@ -1,6 +1,8 @@
 package com.akshay.smart_inventory.service.wastage;
 
 import com.akshay.smart_inventory.dto.request.WastageRequest;
+import com.akshay.smart_inventory.dto.response.TopWastedProductResponse;
+import com.akshay.smart_inventory.dto.response.WastageMonthlyResponse;
 import com.akshay.smart_inventory.dto.response.WastageResponse;
 import com.akshay.smart_inventory.dto.response.WastageSummaryResponse;
 import com.akshay.smart_inventory.exception.ResourceNotFoundException;
@@ -95,5 +97,31 @@ public class WastageService implements IWastageService {
                 (int) wastageRepository.count());
 
         return response;
+    }
+    @Override
+    public List<WastageMonthlyResponse> getMonthlyWastage() {
+
+        return wastageRepository.getMonthlyWastageStats()
+                .stream()
+                .map(row -> new WastageMonthlyResponse(
+                        ((Number) row[0]).intValue(),
+                        ((Number) row[1]).intValue(),
+                        ((Number) row[2]).intValue(),
+                        (java.math.BigDecimal) row[3]
+                ))
+                .toList();
+    }
+
+    @Override
+    public List<TopWastedProductResponse> getTopWastedProducts() {
+
+        return wastageRepository.getTopWastedProducts()
+                .stream()
+                .map(row -> new TopWastedProductResponse(
+                        (String) row[0],
+                        ((Number) row[1]).intValue(),
+                        (java.math.BigDecimal) row[2]
+                ))
+                .toList();
     }
 }

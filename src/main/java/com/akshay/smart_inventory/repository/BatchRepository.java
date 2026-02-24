@@ -25,4 +25,22 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
        """)
     Integer getTotalValidStockByProductId(Long productId);
 
+    @Query("""
+       SELECT COALESCE(SUM(b.quantity), 0)
+       FROM Batch b
+       WHERE b.quantity > 0
+       """)
+    Integer getTotalActiveStock();
+
+    @Query("""
+       SELECT COUNT(b)
+       FROM Batch b
+       WHERE b.quantity > 0
+       AND b.expiryDate BETWEEN :today AND :futureDate
+       """)
+    Long getHighRiskBatchCountBetween(
+            java.time.LocalDate today,
+            java.time.LocalDate futureDate
+    );
+
 }
