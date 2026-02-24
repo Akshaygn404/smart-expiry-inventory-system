@@ -63,4 +63,9 @@ public class BatchController {
 
         return ResponseEntity.ok(batchService.getBatchesExpiringInDays(days));
     }
+
+    @GetMapping("/high-risk")
+    public ResponseEntity<List<BatchResponse>> getHighRiskBatches() {
+        return ResponseEntity.ok(batchService.getHighRiskBatches());
+    }
 }

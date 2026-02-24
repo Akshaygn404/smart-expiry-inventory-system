@@ -18,4 +18,6 @@ public interface IBatchService {
     List<BatchResponse> getExpiredBatches();
 
     List<BatchResponse> getBatchesExpiringInDays(int days);
+
+    List<BatchResponse> getHighRiskBatches();
 }

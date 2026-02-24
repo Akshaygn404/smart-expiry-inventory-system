@@ -6,6 +6,7 @@ import com.akshay.smart_inventory.exception.DuplicateResourceException;
 import com.akshay.smart_inventory.exception.ResourceNotFoundException;
 import com.akshay.smart_inventory.model.Category;
 import com.akshay.smart_inventory.model.Product;
+import com.akshay.smart_inventory.repository.BatchRepository;
 import com.akshay.smart_inventory.repository.CategoryRepository;
 import com.akshay.smart_inventory.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ public class ProductService implements IProductService {
 
     private final ProductRepository productRepository;
     private final CategoryRepository categoryRepository;
+    private final BatchRepository batchRepository;
 
     @Override
     public ProductResponse createProduct(ProductRequest request) {
@@ -100,6 +102,21 @@ public class ProductService implements IProductService {
                 .orElseThrow(() -> new ResourceNotFoundException("Product not found"));
 
         productRepository.delete(product);
+    }
+
+    public List<ProductResponse> getLowStockProducts() {
+
+        return productRepository.findAll()
+                .stream()
+                .filter(product -> {
+
+                    Integer totalStock =
+                            batchRepository.getTotalValidStockByProductId(product.getId());
+
+                    return totalStock < product.getReorderLevel();
+                })
+                .map(this::mapToResponse)
+                .toList();
     }
 
 

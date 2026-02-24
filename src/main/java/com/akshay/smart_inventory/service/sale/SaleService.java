@@ -54,10 +54,10 @@ public class SaleService implements ISaleService {
 
             if (remainingQuantity <= 0) break;
 
-            // Skip expired
+
             if (batch.getExpiryDate().isBefore(LocalDate.now())) continue;
 
-            // Skip empty
+
             if (batch.getQuantity() <= 0) continue;
 
             int quantityFromThisBatch;

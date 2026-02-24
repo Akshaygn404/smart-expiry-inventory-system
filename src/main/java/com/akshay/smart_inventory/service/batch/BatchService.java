@@ -79,6 +79,7 @@ public class BatchService implements IBatchService {
     private BatchResponse mapToResponse(Batch batch) {
 
         BatchResponse response = new BatchResponse();
+
         response.setId(batch.getId());
         response.setBatchNumber(batch.getBatchNumber());
         response.setExpiryDate(batch.getExpiryDate());
@@ -88,6 +89,13 @@ public class BatchService implements IBatchService {
         response.setSupplierName(batch.getSupplierName());
         response.setProductId(batch.getProduct().getId());
         response.setProductName(batch.getProduct().getName());
+
+        long daysLeft =
+                java.time.temporal.ChronoUnit.DAYS
+                        .between(LocalDate.now(), batch.getExpiryDate());
+
+        response.setDaysLeft((int) daysLeft);
+        response.setRiskScore(calculateRiskScore(batch));
 
         return response;
     }
@@ -116,5 +124,38 @@ public class BatchService implements IBatchService {
         return batches.stream()
                 .map(this::mapToResponse)
                 .collect(Collectors.toList());
+    }
+
+    private int calculateRiskScore(Batch batch) {
+
+        long daysLeft =
+                java.time.temporal.ChronoUnit.DAYS
+                        .between(LocalDate.now(), batch.getExpiryDate());
+
+        int urgencyFactor;
+
+        if (daysLeft <= 7) {
+            urgencyFactor = 3;
+        } else if (daysLeft <= 15) {
+            urgencyFactor = 2;
+        } else if (daysLeft <= 30) {
+            urgencyFactor = 1;
+        } else {
+            urgencyFactor = 0;
+        }
+
+        return batch.getQuantity() * urgencyFactor;
+    }
+
+    @Override
+    public List<BatchResponse> getHighRiskBatches() {
+
+        return batchRepository.findAll()
+                .stream()
+                .filter(batch -> batch.getQuantity() > 0)
+                .filter(batch -> !batch.getExpiryDate().isBefore(LocalDate.now()))
+                .map(this::mapToResponse)
+                .filter(response -> response.getRiskScore() > 0)
+                .toList();
     }
 }

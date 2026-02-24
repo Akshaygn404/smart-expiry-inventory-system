@@ -60,4 +60,9 @@ public class ProductController {
 
         return ResponseEntity.ok("Product deleted successfully");
     }
+
+    @GetMapping("/low-stock")
+    public ResponseEntity<List<ProductResponse>> getLowStockProducts() {
+        return ResponseEntity.ok(productService.getLowStockProducts());
+    }
 }

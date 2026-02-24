@@ -18,4 +18,7 @@ public class BatchResponse {
 
     private Long productId;
     private String productName;
+
+    private Integer riskScore;
+    private Integer daysLeft;
 }
